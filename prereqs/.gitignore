@@ -1,0 +1,18 @@
+/target
+**/*.rs.bk
+
+.DS_Store
+
+**/wallet.json
+
+solana-starter/
+
+**/target/
+
+# Possible Solana keypairs names to be ignored for future
+*.keypair.json
+**/id.json
+**/wallet.json
+.keys/
+
+node_modules/
