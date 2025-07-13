@@ -16,7 +16,7 @@ describe("vault", () => {
   let vaultStateBump: number;
   let vaultPda: PublicKey;
   let vaultBump: number;
-  let amount = new anchor.BN(1000000000000000);
+  let amount = new anchor.BN(1_000_000_000);
 
   before(async () => {
     [vaultStatePda, vaultStateBump] = PublicKey.findProgramAddressSync(
@@ -28,17 +28,17 @@ describe("vault", () => {
     );
   })
 
-  it("Initialized", async () => {
-    // Add your test here.
-    const tx = await program.methods.initialize()
-      .accounts({
-        user: user.publicKey,
-        // vaultState: vaultStatePda,
-        // vault: vaultPda
-      })  
-      .rpc();
-    console.log("Your transaction signature", tx);
-  });
+  // it("Initialized", async () => {
+  //   // Add your test here.
+  //   const tx = await program.methods.initialize()
+  //     .accounts({
+  //       user: user.publicKey,
+  //       // vaultState: vaultStatePda,
+  //       // vault: vaultPda
+  //     })  
+  //     .rpc();
+  //   console.log("Your transaction signature", tx);
+  // });
 
   it("is deposited", async() => {
     let userBalanceBefore = await provider.connection.getBalance(user.publicKey);
@@ -72,8 +72,8 @@ describe("vault", () => {
   //   const tx = await program.methods.withdraw(amount)
   //     .accounts({
   //       user: user.publicKey,
-  //       vaultState: vaultStatePda,
-  //       vault: vaultPda,
+  //       // vaultState: vaultStatePda,
+  //       // vault: vaultPda,
   //     })
   //     .rpc();
   //   await new Promise(resolve => setTimeout(resolve, 1000));
