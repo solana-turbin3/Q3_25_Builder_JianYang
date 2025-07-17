@@ -66,39 +66,39 @@ describe("vault", () => {
     assert.equal(userBalanceBefore + vaultBalanceBefore, userBalanceAfter + vaultBalanceAfter + fee);
   });
 
-  // it("is withdrawn", async () => {
-  //   let userBalanceBefore = await provider.connection.getBalance(user.publicKey);
-  //   let vaultBalanceBefore = await provider.connection.getBalance(vaultPda);
-  //   const tx = await program.methods.withdraw(amount)
-  //     .accounts({
-  //       user: user.publicKey,
-  //       // vaultState: vaultStatePda,
-  //       // vault: vaultPda,
-  //     })
-  //     .rpc();
-  //   await new Promise(resolve => setTimeout(resolve, 1000));
-  //   let userBalanceAfter = await provider.connection.getBalance(user.publicKey);
-  //   let vaultBalanceAfter = await provider.connection.getBalance(vaultPda);
-  //   console.log(`user balance went from: ${userBalanceBefore} to ${userBalanceAfter}`);
-  //   console.log(`vault balance went from ${vaultBalanceBefore} to ${vaultBalanceAfter}`);
-  //   const txDetails = await provider.connection.getTransaction(tx, {commitment: "confirmed", maxSupportedTransactionVersion: 0});
-  //   const fee = txDetails?.meta?.fee || 0;
-  //   console.log(`tx fee: ${fee}`);
-  //   assert.equal(userBalanceAfter + vaultBalanceAfter + fee, userBalanceBefore + vaultBalanceBefore);
-  // });
-
-  it("is closed", async() => {
+  it("is withdrawn", async () => {
     let userBalanceBefore = await provider.connection.getBalance(user.publicKey);
     let vaultBalanceBefore = await provider.connection.getBalance(vaultPda);
-    const tx = await program.methods.close()
-    .accounts({
-      user: user.publicKey,
-    })
-    .rpc();
+    const tx = await program.methods.withdraw(amount)
+      .accounts({
+        user: user.publicKey,
+        // vaultState: vaultStatePda,
+        // vault: vaultPda,
+      })
+      .rpc();
     await new Promise(resolve => setTimeout(resolve, 1000));
     let userBalanceAfter = await provider.connection.getBalance(user.publicKey);
+    let vaultBalanceAfter = await provider.connection.getBalance(vaultPda);
+    console.log(`user balance went from: ${userBalanceBefore} to ${userBalanceAfter}`);
+    console.log(`vault balance went from ${vaultBalanceBefore} to ${vaultBalanceAfter}`);
     const txDetails = await provider.connection.getTransaction(tx, {commitment: "confirmed", maxSupportedTransactionVersion: 0});
     const fee = txDetails?.meta?.fee || 0;
-    assert.equal(userBalanceBefore + vaultBalanceBefore - fee, userBalanceAfter)
-  })
+    console.log(`tx fee: ${fee}`);
+    assert.equal(userBalanceAfter + vaultBalanceAfter + fee, userBalanceBefore + vaultBalanceBefore);
+  });
+
+  // it("is closed", async() => {
+  //   let userBalanceBefore = await provider.connection.getBalance(user.publicKey);
+  //   let vaultBalanceBefore = await provider.connection.getBalance(vaultPda);
+  //   const tx = await program.methods.close()
+  //   .accounts({
+  //     user: user.publicKey,
+  //   })
+  //   .rpc();
+  //   await new Promise(resolve => setTimeout(resolve, 1000));
+  //   let userBalanceAfter = await provider.connection.getBalance(user.publicKey);
+  //   const txDetails = await provider.connection.getTransaction(tx, {commitment: "confirmed", maxSupportedTransactionVersion: 0});
+  //   const fee = txDetails?.meta?.fee || 0;
+  //   assert.equal(userBalanceBefore + vaultBalanceBefore - fee, userBalanceAfter)
+  // })
 });
