@@ -61,7 +61,6 @@ pub struct Make <'info> {       // Context for escrow creation step
     )]
     pub vault: InterfaceAccount<'info, TokenAccount>,   // deals with token standards thus `InterfaceAccount`
                                                         // `TokenAccount` deals with token operations
-
     pub token_program: Interface<'info, TokenInterface>,    // `Interface` is kinda analogous to `Program` for known programs
     pub system_program: Program<'info, System>,
     // `AssociatedToken Program` doesn't change with the use of different token standards

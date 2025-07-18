@@ -19,6 +19,7 @@ pub struct Take<'info> {
     pub taker: Signer<'info>,
     // `maker` doesn't need to sign so we'll just use it as a `SystemAccount`
     // it's only being used as a user wallet
+    #[account(mut)]
     pub maker: SystemAccount<'info>,
     #[account(mint::token_program = token_program)]
     pub mint_a: InterfaceAccount<'info, Mint>,

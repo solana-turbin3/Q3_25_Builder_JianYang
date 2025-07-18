@@ -5,14 +5,14 @@ package_manager = "yarn"
 resolution = true
 skip-lint = false
 
-[programs.devnet]
+[programs.localnet]
 escrow = "3kuaUHbR3PRgGv3BrUnmvS4gfPeVFQYwuiKciQBUTA1J"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "devnet"
+cluster = "localnet"
 # wallet = "~/.config/solana/id.json"
 wallet = "./turbin3-wallet.json"
 
