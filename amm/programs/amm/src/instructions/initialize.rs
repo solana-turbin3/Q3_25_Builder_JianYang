@@ -57,7 +57,8 @@ impl <'info> Initialize <'info>  {
         self.config.set_inner(
             Config { 
                 seed: seed, 
-                authority: authority, mint_x: self.mint_x.key(), 
+                authority: authority, 
+                mint_x: self.mint_x.key(), 
                 mint_y: self.mint_y.key(), 
                 fee: fee, 
                 locked: true, 

@@ -41,7 +41,7 @@ pub struct Deposit<'info> {
     )]
     pub vault_y: Account<'info, TokenAccount>,
 
-    #[account(mut, associated_token::mint = mint_x, associated_token::authority = user_y)]
+    #[account(mut, associated_token::mint = mint_x, associated_token::authority = user)]
     pub user_x: Account<'info, TokenAccount>,
 
     #[account(mut, associated_token::mint = mint_y, associated_token::authority = user)]
@@ -84,7 +84,7 @@ impl <'info> Deposit<'info> {
         let cpi_program = self.token_program.to_account_info();
         let cpi_accounts = MintTo {
             mint: self.mint_lp.to_account_info(),
-            to: self.user.to_account_info(),
+            to: self.user_lp.to_account_info(),
             authority: self.config.to_account_info(),
         };
         let seeds = &[
@@ -113,7 +113,7 @@ impl <'info> Deposit<'info> {
                 }
             };
     
-            assert!(x < max_x && y < max_y);
+            assert!(x <= max_x && y <= max_y);
             self.deposit_token(true, x)?;
             self.deposit_token(false, y)?;
             self.mint_lp_token(amount)?;
