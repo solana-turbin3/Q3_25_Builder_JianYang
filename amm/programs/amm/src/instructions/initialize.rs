@@ -41,7 +41,7 @@ pub struct Initialize<'info> {
     #[account(
         init,
         payer = initializer,
-        seeds = [b"config", config.key().as_ref()],
+        seeds = [b"config", seed.to_le_bytes().as_ref()],   // fix:  becomes a circular reference if we pass config.key().as_ref()
         bump,
         space = 8 + Config::INIT_SPACE
     )]

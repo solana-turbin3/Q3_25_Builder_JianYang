@@ -8,3 +8,5 @@ test-ledger
 **/*wallet.json
 *wallet.json
 turbin3-wallet.json
+initializer.json
+user.json

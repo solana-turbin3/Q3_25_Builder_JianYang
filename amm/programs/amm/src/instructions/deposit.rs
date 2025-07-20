@@ -7,8 +7,8 @@ use anchor_spl::{
 use constant_product_curve::ConstantProduct;
 
 use crate::Config;
-
 #[derive(Accounts)]
+#[instruction(seed: u64)]
 pub struct Deposit<'info> {
     #[account(mut)]
     pub user: Signer<'info >,
@@ -20,7 +20,7 @@ pub struct Deposit<'info> {
     pub mint_lp: Account<'info, Mint>,
     
     #[account(
-        seeds = [b"config", config.key().as_ref(),],
+        seeds = [b"config", config.seed.to_le_bytes().as_ref()],       // changed config seed here too
         bump = config.config_bump,
         has_one = mint_x,
         has_one = mint_y,
@@ -36,7 +36,7 @@ pub struct Deposit<'info> {
 
     #[account(
         mut,
-        associated_token::mint = mint_x,
+        associated_token::mint = mint_y,
         associated_token::authority = config,
     )]
     pub vault_y: Account<'info, TokenAccount>,
@@ -107,7 +107,8 @@ impl <'info> Deposit<'info> {
                         self.vault_x.amount, 
                         self.vault_y.amount, 
                         self.mint_lp.supply, 
-                        amount, 6
+                        amount, 
+                        6
                     ).unwrap();
                     (amounts.x, amounts.y)
                 }
