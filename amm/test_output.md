@@ -1,5 +1,8 @@
+```
 amm
-Your transaction signature iktMNZMVv4vj65AQkqyjaCpBmuzF2pGXyBoAKydLT4MZTTRBhpmkxDN6eF2CobRd2A1kL31VvNPBebANCSzqjUE
+Your transaction signature:
+iktMNZMVv4vj65AQkqyjaCpBmuzF2pGXyBoAKydLT4MZTTRBhpmkxDN6eF2CobRd2A1kL31VvNPBebANCSzqjUE
+
 {
   seed: <BN: 10f2c>,
   authority: PublicKey [PublicKey(EvGwyEES3WLwBEcAu4ndhf7ZwwcXc98e2nnMdEpt933p)] {
@@ -16,12 +19,14 @@ Your transaction signature iktMNZMVv4vj65AQkqyjaCpBmuzF2pGXyBoAKydLT4MZTTRBhpmkx
   configBump: 255,
   lpBump: 254
 }
+
 config address: HrwSZMwepdhS4gTDmXJB4ohYvY3JbyDFTpFmTn2rqZEX
-    ✔ Is initialized! (775ms)
+✔ Is initialized! (775ms)
+
 userLpAccountBalance: 1000000
-    ✔ deposits tokens and mints lp tokens (1049ms)
+✔ deposits tokens and mints lp tokens (1049ms)
 
-
-  2 passing (12s)
+2 passing (12s)
 
 ✨  Done in 13.78s.
+```
