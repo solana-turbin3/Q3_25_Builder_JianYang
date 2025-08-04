@@ -65,8 +65,25 @@ pub mod simple_nft_staking {
             ctx.accounts.user_nft_account.amount == 1,
             ErrorCode::InvalidNFTAmount
         );
+        
+        // update rewards for the existing staked nfts
+        if user_account.total_staked > 0 {
+            let time_diff = Clock::get()?.unix_timestamp - user_account.last_claim;
+            let pending_points = (time_diff as u64)
+            .checked_mul(stake_config.points_per_second)
+            .ok_or(ErrorCode::PendingPointsArithmeticOverflow)?
+            .checked_mul(user_account.total_staked as u64)
+            .ok_or(ErrorCode::PendingPointsArithmeticOverflow)?;
+
+            user_account.accumulated_points = user_account.accumulated_points
+                .checked_add(pending_points)
+                .ok_or(ErrorCode::PendingPointsArithmeticOverflow)?;
+        }
+    
         // user stats update
         user_account.total_staked += 1;
+        // update the timestamp
+        user_account.last_claim = Clock::get()?.unix_timestamp;
 
         let cpi_accounts = token::Transfer {
             from: ctx.accounts.user_nft_account.to_account_info(),
@@ -107,6 +124,48 @@ pub mod simple_nft_staking {
         stake_account.staked_at = 0;
         Ok(())
     }
+
+    pub fn claim_rewards(ctx: Context<ClaimRewards>) -> Result<()> {
+        let current_timestamp = Clock::get()?.unix_timestamp;
+        let user_account = &mut ctx.accounts.user_account;
+
+        // time elapsed since the last claim
+        let time_diff = current_timestamp - user_account.last_claim;
+
+        let total_new_points = (time_diff as u64)
+        .checked_mul(ctx.accounts.stake_config.points_per_second)
+        .ok_or(ErrorCode::RewardsOverflow)?
+        .checked_mul(user_account.total_staked as u64)
+        .ok_or(ErrorCode::RewardsOverflow)?;
+
+        // update accumulated points
+        user_account.accumulated_points = user_account.accumulated_points
+            .checked_add(total_new_points as u64)
+            .ok_or(ErrorCode::RewardsOverflow)?;
+        
+        // updating last claim time
+        user_account.last_claim = current_timestamp;
+
+        Ok(())
+    }
+}
+
+#[derive(Accounts)]
+pub struct ClaimRewards<'info> {
+    #[account(mut)]
+    pub payer: Signer<'info>,
+    #[account(
+        mut,
+        seeds = [b"user_account", payer.key.as_ref()],
+        bump
+    )]
+    pub user_account: Account<'info, UserAccount>,
+    #[account(
+        seeds = [b"stake_config"],
+        bump
+    )]
+    pub stake_config: Account<'info, StakeConfig>,
+
 }
 
 #[derive(Accounts)]
@@ -164,6 +223,7 @@ pub struct Stake<'info> {
     )]
     pub nft_vault: Account<'info, TokenAccount>,
     pub nft_mint: Account<'info, Mint>,
+    /// CHECK: this is a PDA derived from program ID, used as token authority for vaults
     #[account(
         seeds = [b"vault_authority", &id().as_ref()],
         bump
@@ -197,6 +257,7 @@ pub struct Unstake<'info> {
     #[account(mut)]
     pub user_nft_account: Account<'info, TokenAccount>,
     pub nft_vault: Account<'info, TokenAccount>,
+    /// CHECK: this is a PDA derived from program ID, used as token authority for vaults
     #[account(
         seeds = [b"vault_authority", &id().as_ref()],
         bump
@@ -214,6 +275,8 @@ pub struct Unstake<'info> {
     pub token_program: Program<'info, Token>,
 }
 
+
+
 #[error_code]
 pub enum ErrorCode {
     #[msg("Unauthorized: You are not the staker of this NFT")]
@@ -230,4 +293,8 @@ pub enum ErrorCode {
     InvalidNFTAmount,
     #[msg("Staker Is Not NFT Owner")]
     NotNFTOwner,
+    #[msg("Arithmetic Overflow In Rewards Calculation")]
+    RewardsOverflow,
+    #[msg("Arithmetic Overflow In Pending Rewards Calculation")]
+    PendingPointsArithmeticOverflow,
 } 
