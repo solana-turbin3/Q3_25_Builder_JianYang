@@ -1,4 +1,8 @@
-// simple nft-staking program only demonstrating the custody of NFT
+// simple nft-staking program implementing
+// staking
+// unstaking
+// rewards_claim by the user
+// global state is tracked and rewards calculations are properly taken care of
 #![allow(deprecated)]
 #![allow(unexpected_cfgs)]
 use anchor_lang::prelude::*;
