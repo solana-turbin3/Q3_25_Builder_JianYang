@@ -31,4 +31,12 @@ pub mod anchor_marketplace {
         ctx.accounts.remove_listing()?;
         Ok(())
     }
+
+    pub fn purchase(ctx: Context<Purchase>) -> Result<()> {
+        ctx.accounts.fee_transfer()?;
+        ctx.accounts.seller_amount_transfer()?;
+        ctx.accounts.transfer_nft_to_buyer()?;
+        ctx.accounts.listing.is_active = false;
+        Ok(())
+    }
 }

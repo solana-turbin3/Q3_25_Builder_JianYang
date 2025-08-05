@@ -6,4 +6,12 @@ pub enum ErrorCode {
     ArithmeticOverflowInCreateListing,
     #[msg("Unauthorized Seller Trying To Remove Listing")]
     UnauthorizedSeller,
+    #[msg("Invalid Seller")]
+    InvalidSeller,
+    #[msg("Listing Expired")]
+    ListingExpired,
+    #[msg("Invalid Authority")]
+    InvalidAuthority,
+    #[msg("Listing Not Active")]
+    ListingNotActive,
 }
